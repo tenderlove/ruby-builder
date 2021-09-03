@@ -11,7 +11,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ ubuntu-16.04, ubuntu-18.04, ubuntu-20.04, macos-latest ]
-        ruby: ["truffleruby-21.2.0.1"]
+        ruby: ["ruby-3.0.2"]
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v2
@@ -21,7 +21,7 @@ jobs:
         tag=toolcache
         echo "::set-output name=tag::$tag"
     - name: Check if already built
-      run: '! curl -s --head --fail https://github.com/ruby/ruby-builder/releases/download/${{ steps.info.outputs.tag }}/${{ matrix.ruby }}-${{ matrix.os }}.tar.gz'
+      run: '! curl -s --head --fail https://github.com/tenderlove/ruby-builder/releases/download/${{ steps.info.outputs.tag }}/${{ matrix.ruby }}-${{ matrix.os }}.tar.gz'
 
     - name: Set NO_DOCUMENT
       run: |
@@ -81,7 +81,7 @@ jobs:
     - name: Build Ruby
       run: ruby-build --verbose $RUBY_BUILD_RUBY_NAME $PREFIX
       env:
-        RUBY_CONFIGURE_OPTS: --disable-install-doc
+        RUBY_CONFIGURE_OPTS: --disable-shared --disable-install-doc
         CPPFLAGS: "-DENABLE_PATH_CHECK=0" # https://github.com/actions/virtual-environments/issues/267
     - name: Create archive
       run: tar czf ${{ matrix.ruby }}-${{ matrix.os }}.tar.gz -C $(dirname $PREFIX) $(basename $PREFIX)
@@ -108,7 +108,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         # curl -s "https://api.github.com/repos/ruby/ruby-builder/releases/tags/$TAG" | jq -r .upload_url
-        upload_url: 'https://uploads.github.com/repos/tenderlove/ruby-builder/releases/33599578/assets{?name,label}'
+        upload_url: 'https://uploads.github.com/repos/tenderlove/ruby-builder/releases/48992313/assets{?name,label}'
         asset_path: ${{ matrix.ruby }}-${{ matrix.os }}.tar.gz
         asset_name: ${{ matrix.ruby }}-${{ matrix.os }}.tar.gz
         asset_content_type: application/gzip
@@ -130,7 +130,7 @@ jobs:
         echo "::set-output name=tag::$tag"
       shell: bash
     - name: Check if already built
-      run: '! curl -s --head --fail https://github.com/ruby/ruby-builder/releases/download/${{ steps.info.outputs.tag }}/${{ matrix.ruby }}-${{ matrix.os }}.tar.gz'
+      run: '! curl -s --head --fail https://github.com/tenderlove/ruby-builder/releases/download/${{ steps.info.outputs.tag }}/${{ matrix.ruby }}-${{ matrix.os }}.tar.gz'
       shell: bash
 
     - name: Set PREFIX
@@ -188,7 +188,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         # curl -s "https://api.github.com/repos/ruby/ruby-builder/releases/tags/$TAG" | jq -r .upload_url
-        upload_url: 'https://uploads.github.com/repos/tenderlove/ruby-builder/releases/33599578/assets{?name,label}'
+        upload_url: 'https://uploads.github.com/repos/tenderlove/ruby-builder/releases/48992313/assets{?name,label}'
         asset_path: ${{ matrix.ruby }}-${{ matrix.os }}.tar.gz
         asset_name: ${{ matrix.ruby }}-${{ matrix.os }}.tar.gz
         asset_content_type: application/gzip
